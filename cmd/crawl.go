@@ -6,6 +6,7 @@ import (
 	"syscall"
 
 	"github.com/jianggushi/proxypool/pkg/schedule"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -28,5 +29,16 @@ func runCrawl(cmd *cobra.Command, args []string) {
 }
 
 func init() {
+	logrus.SetLevel(logrus.InfoLevel)
+	// logrus.SetReportCaller(true)
+	logrus.SetFormatter(&logrus.TextFormatter{
+		// DisableColors: true,
+		FullTimestamp: true,
+	})
+	// file, err := os.OpenFile("log/crawl.log", os.O_CREATE|os.O_WRONLY, 0666)
+	// if err != nil {
+	// 	logrus.Fatalf("create crawl.log: %v", err)
+	// }
+	// logrus.SetOutput(file)
 	rootCmd.AddCommand(crawlCmd)
 }
