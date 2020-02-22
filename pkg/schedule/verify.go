@@ -55,7 +55,9 @@ var (
 // ScheduleVerifyDB 定时任务，验证 db 中 proxy 的有效性
 func ScheduleVerifyDB() {
 	for {
+		t1 := time.Now()
 		VerifyDB()
+		log.Infof("verify db proxy cost time: %v", time.Since(t1))
 		log.Infof("schedule verify db proxy next: %v", time.Now().Add(verifyDuration))
 		<-time.After(verifyDuration)
 	}
