@@ -1,13 +1,19 @@
 package cmd
 
 import (
-	"os"
-	"os/signal"
-	"syscall"
+	"fmt"
+	"sync"
 
-	"github.com/jianggushi/proxypool/pkg/schedule"
+	"github.com/jianggushi/proxypool/conf"
+	"github.com/jianggushi/proxypool/pkg/filter"
+	"github.com/jianggushi/proxypool/pkg/model"
+	"github.com/jianggushi/proxypool/pkg/spider/common"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+)
+
+var (
+	spiderName string
 )
 
 var crawlCmd = &cobra.Command{
@@ -17,28 +23,46 @@ var crawlCmd = &cobra.Command{
 }
 
 func runCrawl(cmd *cobra.Command, args []string) {
-	signalChan := make(chan os.Signal, 1)
-	sig := []os.Signal{syscall.SIGINT, syscall.SIGTERM}
-	signal.Notify(signalChan, sig...)
+	// find spider config
+	spiderConf := conf.Spider{}
+	for _, sp := range conf.Conf.Spiders {
+		if sp.Name == spiderName {
+			spiderConf = sp
+		}
+	}
+	if spiderConf.Name == "" {
+		logrus.Fatalf("not find spider config: %s", spiderName)
+	}
 
-	go schedule.ScheduleCrawl()
-	go schedule.DaemonVerifyCrawl()
-	go schedule.ScheduleVerifyDB()
-
-	<-signalChan
+	crawlChan := make(chan *model.Proxy, 100)
+	var wg sync.WaitGroup
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func(index int) {
+			log := logrus.WithFields(logrus.Fields{
+				"index": index,
+			})
+			for proxy := range crawlChan {
+				log := log.WithFields(logrus.Fields{
+					"proxy": fmt.Sprintf("%s:%s", proxy.Host, proxy.Port),
+				})
+				err := filter.VerifyProxy(proxy)
+				if err != nil {
+					log.Warn("verify crawl proxy fail")
+					continue
+				}
+				log.Info("verify crawl proxy pass")
+			}
+			wg.Done()
+		}(i)
+	}
+	spider := common.NewSpider(spiderConf.Name, spiderConf.Url, spiderConf.Rule)
+	spider.Crawl(crawlChan)
+	close(crawlChan)
+	wg.Wait()
 }
 
 func init() {
-	logrus.SetLevel(logrus.InfoLevel)
-	// logrus.SetReportCaller(true)
-	logrus.SetFormatter(&logrus.TextFormatter{
-		// DisableColors: true,
-		FullTimestamp: true,
-	})
-	// file, err := os.OpenFile("log/crawl.log", os.O_CREATE|os.O_WRONLY, 0666)
-	// if err != nil {
-	// 	logrus.Fatalf("create crawl.log: %v", err)
-	// }
-	// logrus.SetOutput(file)
+	crawlCmd.Flags().StringVar(&spiderName, "spider", "", "spider for test")
 	rootCmd.AddCommand(crawlCmd)
 }
