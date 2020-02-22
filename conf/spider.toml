@@ -3,16 +3,13 @@
 
 [[spider]]
   name = "kuaidaili"
-  url = "https://www.kuaidaili.com/free/inha/1/"
-  [spider.rule]
-    host = 0
-    port = 1
-    anonymity = 2
-	scheme = 3
-
-[[spider]]
-  name = "kuaidaili-2"
-  url = "https://www.kuaidaili.com/free/intr/1/"
+  url = [
+    "https://www.kuaidaili.com/free/inha/1/",
+    "https://www.kuaidaili.com/free/inha/2/",
+    "https://www.kuaidaili.com/free/inha/3/",
+    "https://www.kuaidaili.com/free/inha/4/",
+    "https://www.kuaidaili.com/free/inha/5/",
+  ]
   [spider.rule]
     host = 0
     port = 1
@@ -21,7 +18,7 @@
 
 [[spider]]
   name = "ip3366"
-  url = "http://www.ip3366.net/"
+  url = ["http://www.ip3366.net/"]
   [spider.rule]
     host = 0
     port = 1
@@ -30,7 +27,7 @@
 
 [[spider]]
   name = "freeip"
-  url = "https://www.freeip.top/?page=1"
+  url = ["https://www.freeip.top/?page=1"]
   [spider.rule]
     host = 0
     port = 1
@@ -39,7 +36,7 @@
 
 [[spider]]
   name = "89ip"
-  url = "http://www.89ip.cn/index.html"
+  url = ["http://www.89ip.cn/index.html"]
   [spider.rule]
     host = 0
     port = 1

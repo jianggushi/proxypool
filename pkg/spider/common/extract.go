@@ -9,7 +9,7 @@ import (
 	"github.com/jianggushi/proxypool/pkg/model"
 )
 
-func extractProxy(r io.Reader, rules map[string]int) ([]*model.Proxy, error) {
+func extractProxy(r io.Reader, rule map[string]int) ([]*model.Proxy, error) {
 	// load html
 	doc, err := goquery.NewDocumentFromReader(r)
 	if err != nil {
@@ -19,23 +19,23 @@ func extractProxy(r io.Reader, rules map[string]int) ([]*model.Proxy, error) {
 	if err != nil {
 		return nil, err
 	}
-	return mapping(records, rules), nil
+	return mapping(records, rule), nil
 }
 
-func mapping(records [][]string, rules map[string]int) []*model.Proxy {
+func mapping(records [][]string, rule map[string]int) []*model.Proxy {
 	proxies := make([]*model.Proxy, 0, len(records))
 	for _, record := range records {
 		proxy := &model.Proxy{}
-		if k, ok := rules["host"]; ok {
+		if k, ok := rule["host"]; ok {
 			proxy.Host = record[k]
 		}
-		if k, ok := rules["port"]; ok {
+		if k, ok := rule["port"]; ok {
 			proxy.Port = record[k]
 		}
-		if k, ok := rules["scheme"]; ok {
+		if k, ok := rule["scheme"]; ok {
 			proxy.Scheme = model.ParseScheme(record[k])
 		}
-		if k, ok := rules["anonymity"]; ok {
+		if k, ok := rule["anonymity"]; ok {
 			proxy.Anonymity = model.ParseAnonymity(record[k])
 		}
 		proxies = append(proxies, proxy)

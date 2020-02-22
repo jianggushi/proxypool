@@ -12,7 +12,7 @@ type Config struct {
 
 type Spider struct {
 	Name string         `toml:"name"`
-	Url  string         `toml:"url"`
+	Url  []string       `toml:"url"`
 	Rule map[string]int `toml:"rule"`
 }
 

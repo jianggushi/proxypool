@@ -30,7 +30,7 @@ func Test_Crawl(t *testing.T) {
 		"anonymity": 2,
 		"scheme":    3,
 	}
-	url := "https://www.kuaidaili.com/free/inha/1/"
+	url := []string{"https://www.kuaidaili.com/free/inha/1/"}
 	spider := NewSpider("kuaidaili", url, rules)
 	spider.Crawl(ch)
 	time.Sleep(5 * time.Second)
