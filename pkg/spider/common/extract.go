@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"regexp"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -74,7 +75,19 @@ func extractFromTable(doc *goquery.Document) ([][]string, error) {
 	doc.Find("table tbody tr").Each(func(i int, s *goquery.Selection) {
 		item := make([]string, 0)
 		s.Find("td").Each(func(i int, s *goquery.Selection) {
-			item = append(item, strings.TrimSpace(s.Text()))
+			// remove hidden element that confuse
+			// see http://www.goubanjia.com/
+			s.Find("[style]").Each(func(i int, s *goquery.Selection) {
+				style, _ := s.Attr("style")
+				matched, _ := regexp.MatchString(`display:\s*none`, style)
+				if matched {
+					s.Remove()
+				}
+			})
+			// format text
+			text := s.Text()
+			text = regexp.MustCompile(`\s{2,}`).ReplaceAllString(text, " ")
+			item = append(item, strings.TrimSpace(text))
 		})
 		// exclude empty item
 		if len(item) != 0 {
