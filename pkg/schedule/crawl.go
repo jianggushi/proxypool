@@ -13,7 +13,7 @@ import (
 var (
 	crawlChan     chan *model.Proxy
 	crawlChanCap  = 20
-	crawlDuration = 3 * time.Minute
+	crawlDuration = 10 * time.Second
 
 	numSpiders int
 

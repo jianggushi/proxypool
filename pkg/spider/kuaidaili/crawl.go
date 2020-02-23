@@ -2,7 +2,6 @@ package kuaidaili
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"time"
 
@@ -54,7 +53,7 @@ func (s *KuaiDaiLi) Crawl(c chan<- *model.Proxy) {
 	for _, proxy := range proxies {
 		c <- proxy
 		log.WithFields(logrus.Fields{
-			"proxy": fmt.Sprintf("%s:%s", proxy.Host, proxy.Port),
+			"proxy": proxy.Proxy,
 		}).Info("crawl proxy")
 	}
 }

@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -10,6 +9,7 @@ type Proxy struct {
 	Host      string    `json:"host"`      // hostname or ip address
 	Port      string    `json:"port"`      // port number
 	Scheme    Scheme    `json:"scheme"`    // http or https
+	Proxy     string    `json:"proxy"`     // proxy ip:port
 	Anonymity Anonymity `json:"anonymity"` // anonymity
 	Ping      int       `json:"ping"`      // ping time
 	Transfer  int       `json:"transfer"`  // transfer time
@@ -22,5 +22,5 @@ type Proxy struct {
 }
 
 func (p Proxy) String() string {
-	return fmt.Sprintf("%s:%s", p.Host, p.Port)
+	return p.Proxy
 }

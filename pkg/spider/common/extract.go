@@ -2,6 +2,7 @@ package common
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"strings"
 
@@ -35,8 +36,23 @@ func mapping(records [][]string, rule map[string]int) []*model.Proxy {
 		if k, ok := rule["scheme"]; ok {
 			proxy.Scheme = model.ParseScheme(record[k])
 		}
+		if k, ok := rule["proxy"]; ok {
+			proxy.Proxy = record[k]
+		}
 		if k, ok := rule["anonymity"]; ok {
 			proxy.Anonymity = model.ParseAnonymity(record[k])
+		}
+
+		if proxy.Host == "" &&
+			proxy.Port == "" &&
+			proxy.Proxy != "" {
+			items := strings.Split(proxy.Proxy, ":")
+			proxy.Host = items[0]
+			proxy.Port = items[len(items)-1]
+		}
+		if proxy.Host != "" && proxy.Port != "" &&
+			proxy.Proxy == "" {
+			proxy.Proxy = fmt.Sprintf("%s:%s", proxy.Host, proxy.Port)
 		}
 		proxies = append(proxies, proxy)
 	}

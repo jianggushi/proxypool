@@ -19,7 +19,7 @@ func RequestBaidu(proxy *model.Proxy) (int, error) {
 func requestSite(proxy *model.Proxy, siteurl string) (int, error) {
 	// build proxy url for http client
 	proxyurl := func(*http.Request) (*url.URL, error) {
-		rawurl := fmt.Sprintf("http://%s:%s", proxy.Host, proxy.Port)
+		rawurl := fmt.Sprintf("http://%s", proxy.Proxy)
 		return url.Parse(rawurl)
 	}
 	// new http client, timeout 10s

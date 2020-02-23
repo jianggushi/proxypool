@@ -29,15 +29,15 @@ const (
 
 func ParseScheme(scheme string) Scheme {
 	scheme = strings.ToUpper(strings.TrimSpace(scheme))
-	switch scheme {
-	case "HTTP":
-		return Http
-	case "HTTPS":
-		return Https
-	case "SOCKS4":
-		return Socks4
-	case "SOCKS5":
+	switch {
+	case strings.Contains(scheme, "SOCKS5"):
 		return Socks5
+	case strings.Contains(scheme, "SOCKS4"):
+		return Socks4
+	case strings.Contains(scheme, "HTTPS"):
+		return Https
+	case strings.Contains(scheme, "HTTP"):
+		return Http
 	default:
 		return UnknownS
 	}

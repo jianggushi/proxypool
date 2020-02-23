@@ -49,14 +49,12 @@ func put(proxy *model.Proxy) error {
 	if err != nil {
 		return err
 	}
-	proxystr := fmt.Sprintf("%s:%s", proxy.Host, proxy.Port)
-	return rdb.HSet(key, proxystr, string(res)).Err()
+	return rdb.HSet(key, proxy.Proxy, string(res)).Err()
 }
 
 // Delete remove proxy from db
 func Delete(proxy *model.Proxy) error {
-	proxystr := fmt.Sprintf("%s:%s", proxy.Host, proxy.Port)
-	return delete(proxystr)
+	return delete(proxy.Proxy)
 }
 
 // Delete2 remove proxy from db

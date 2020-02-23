@@ -1,7 +1,6 @@
 package schedule
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
@@ -30,7 +29,7 @@ func VerifyCrawl(index int) {
 	})
 	for proxy := range crawlChan {
 		log := log.WithFields(logrus.Fields{
-			"proxy": fmt.Sprintf("%s:%s", proxy.Host, proxy.Port),
+			"proxy": proxy.Proxy,
 		})
 		err := filter.VerifyProxy(proxy)
 		if err != nil {
@@ -94,7 +93,7 @@ func verifyDB(index int, dbChan <-chan *model.Proxy) {
 	})
 	for proxy := range dbChan {
 		log := log.WithFields(logrus.Fields{
-			"proxy": fmt.Sprintf("%s:%s", proxy.Host, proxy.Port),
+			"proxy": proxy.Proxy,
 		})
 		err := filter.VerifyProxy(proxy)
 		if err != nil {

@@ -1,7 +1,6 @@
 package common
 
 import (
-	"fmt"
 	"net/url"
 	"time"
 
@@ -66,7 +65,7 @@ func (s *Common) Crawl(crawlChan chan<- *model.Proxy) {
 			proxy.Created = time.Now()
 			crawlChan <- proxy
 			log.WithFields(logrus.Fields{
-				"proxy": fmt.Sprintf("%s:%s", proxy.Host, proxy.Port),
+				"proxy": proxy.Proxy,
 			}).Info("crawl proxy")
 		}
 		// delay for next url

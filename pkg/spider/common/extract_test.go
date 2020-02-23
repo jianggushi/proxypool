@@ -8,7 +8,7 @@ import (
 )
 
 func Test_extractFromTable(t *testing.T) {
-	file, err := os.Open("example/kuaidaili-20200219.html")
+	file, err := os.Open("example/superfastip-20200223.html")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -24,7 +24,7 @@ func Test_extractFromTable(t *testing.T) {
 }
 
 func Test_extractProxy(t *testing.T) {
-	file, err := os.Open("example/kuaidaili-20200219.html")
+	file, err := os.Open("example/superfastip-20200223.html")
 	if err != nil {
 		t.Fatal(err)
 	}
