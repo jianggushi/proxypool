@@ -60,6 +60,14 @@ func mapping(records [][]string, rule map[string]int) []*model.Proxy {
 }
 
 // Find parse the html find proxy
+// <table>
+//   <thead>
+//     <tr></tr>
+//   </thead>
+//   <tbody>
+//     <tr></tr>
+//   </tbody>
+// </table
 func extractFromTable(doc *goquery.Document) ([][]string, error) {
 	records := make([][]string, 0)
 	// tbody
@@ -68,7 +76,10 @@ func extractFromTable(doc *goquery.Document) ([][]string, error) {
 		s.Find("td").Each(func(i int, s *goquery.Selection) {
 			item = append(item, strings.TrimSpace(s.Text()))
 		})
-		records = append(records, item)
+		// exclude empty item
+		if len(item) != 0 {
+			records = append(records, item)
+		}
 	})
 	if len(records) == 0 {
 		return nil, errors.New("not found proxy record")
